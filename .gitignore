@@ -37,3 +37,6 @@ lerna-debug.log*
 !.vscode/tasks.json
 !.vscode/launch.json
 !.vscode/extensions.json
+
+#thunder_client
+thunder-collection_drivenpass.json
