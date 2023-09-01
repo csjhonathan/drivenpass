@@ -42,7 +42,7 @@ export class CredentialRepository {
     });
   }
 
-  remove(id: number) {
-    return this.prisma.credential.delete({ where: { id } });
+  remove(id: number, userId: number) {
+    return this.prisma.credential.delete({ where: { id, userId } });
   }
 }

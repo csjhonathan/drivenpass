@@ -1,3 +1,4 @@
+import { AuthenticatedUser } from './../protocols/protocols';
 import {
   Controller,
   Get,
@@ -12,8 +13,7 @@ import {
 import { CredentialService } from './credential.service';
 import { CreateCredentialDto } from './dto/create-credential.dto';
 import { AuthGuard } from '../guards/auth.guard';
-import { User } from 'src/decorators/user.decorator';
-import { User as UserPrisma } from '@prisma/client';
+import { User } from '../decorators/user.decorator';
 
 @UseGuards(AuthGuard)
 @Controller('credentials')
@@ -23,35 +23,32 @@ export class CredentialController {
   @Post()
   create(
     @Body() createCredentialDto: CreateCredentialDto,
-    @User() user: Omit<UserPrisma, 'password' | 'createdAt' | 'updatedAt'>,
+    @User() user: AuthenticatedUser,
   ) {
-    return this.credentialService.create(createCredentialDto, user);
+    const { id } = user;
+
+    return this.credentialService.create(createCredentialDto, id);
   }
 
   @Get()
-  findAll(
-    @User() user: Omit<UserPrisma, 'password' | 'createdAt' | 'updatedAt'>,
-  ) {
-    const { id: userId } = user;
-    return this.credentialService.findAll(userId);
+  findAll(@User() user: AuthenticatedUser) {
+    const { id } = user;
+
+    return this.credentialService.findAll(id);
   }
 
   @Get(':id')
-  findOne(
-    @Param('id') id: string,
-    @User() user: Omit<UserPrisma, 'password' | 'createdAt' | 'updatedAt'>,
-  ) {
+  findOne(@Param('id') id: string, @User() user: AuthenticatedUser) {
     const { id: userId } = user;
+
     return this.credentialService.findOne(+id, userId);
   }
 
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
-  remove(
-    @Param('id') id: string,
-    @User() user: Omit<UserPrisma, 'password' | 'createdAt' | 'updatedAt'>,
-  ) {
+  remove(@Param('id') id: string, @User() user: AuthenticatedUser) {
     const { id: userId } = user;
+
     return this.credentialService.remove(+id, userId);
   }
 }
