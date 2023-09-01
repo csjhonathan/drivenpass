@@ -26,7 +26,7 @@ export class CredentialService {
     }
 
     const data: CreateCredentialDto =
-      this.credentialHelpers.formatCredential(createCredentialDto);
+      this.credentialHelpers.encryptCredential(createCredentialDto);
 
     return this.credentialRepository.create(data, userId);
   }
@@ -34,7 +34,9 @@ export class CredentialService {
   async findAll(userId: number) {
     const credentials = await this.credentialRepository.findAll(userId);
 
-    return credentials.map(this.credentialHelpers.formatCredential);
+    return credentials.map((cred) =>
+      this.credentialHelpers.decryptCredential(cred),
+    );
   }
 
   async findOne(id: number, userId: number) {
@@ -50,7 +52,7 @@ export class CredentialService {
       );
     }
 
-    return this.credentialHelpers.formatCredential(credential);
+    return this.credentialHelpers.decryptCredential(credential);
   }
 
   async remove(id: number, userId: number) {

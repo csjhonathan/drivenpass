@@ -6,6 +6,9 @@ import {
   Param,
   Delete,
   UseGuards,
+  ParseIntPipe,
+  HttpCode,
+  HttpStatus,
 } from '@nestjs/common';
 import { NoteService } from './note.service';
 import { CreateNoteDto } from './dto/create-note.dto';
@@ -35,14 +38,21 @@ export class NoteController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string, @User() user: AuthenticatedUser) {
+  findOne(
+    @Param('id', ParseIntPipe) id: string,
+    @User() user: AuthenticatedUser,
+  ) {
     const { id: userId } = user;
 
     return this.noteService.findOne(+id, userId);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string, @User() user: AuthenticatedUser) {
+  @HttpCode(HttpStatus.NO_CONTENT)
+  remove(
+    @Param('id', ParseIntPipe) id: string,
+    @User() user: AuthenticatedUser,
+  ) {
     const { id: userId } = user;
 
     return this.noteService.remove(+id, userId);

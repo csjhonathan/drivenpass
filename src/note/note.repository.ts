@@ -24,7 +24,6 @@ export class NoteRepository {
         id: true,
         title: true,
         text: true,
-        userId: true,
       },
     });
   }

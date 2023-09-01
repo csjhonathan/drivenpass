@@ -9,6 +9,7 @@ import {
   UseGuards,
   HttpCode,
   HttpStatus,
+  ParseIntPipe,
 } from '@nestjs/common';
 import { CredentialService } from './credential.service';
 import { CreateCredentialDto } from './dto/create-credential.dto';
@@ -38,7 +39,10 @@ export class CredentialController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string, @User() user: AuthenticatedUser) {
+  findOne(
+    @Param('id', ParseIntPipe) id: string,
+    @User() user: AuthenticatedUser,
+  ) {
     const { id: userId } = user;
 
     return this.credentialService.findOne(+id, userId);
@@ -46,7 +50,10 @@ export class CredentialController {
 
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
-  remove(@Param('id') id: string, @User() user: AuthenticatedUser) {
+  remove(
+    @Param('id', ParseIntPipe) id: string,
+    @User() user: AuthenticatedUser,
+  ) {
     const { id: userId } = user;
 
     return this.credentialService.remove(+id, userId);
