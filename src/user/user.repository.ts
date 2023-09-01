@@ -33,4 +33,13 @@ export class UserRepository {
       },
     });
   }
+
+  deleteUserData(userId: number) {
+    return this.prisma.$transaction([
+      this.prisma.credential.deleteMany({ where: { userId } }),
+      this.prisma.note.deleteMany({ where: { userId } }),
+      this.prisma.card.deleteMany({ where: { userId } }),
+      this.prisma.user.delete({ where: { id: userId } }),
+    ]);
+  }
 }

@@ -1,6 +1,7 @@
 import {
   ConflictException,
   Injectable,
+  NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -9,6 +10,8 @@ import { SignInDto } from './dto/signIn.dto';
 import * as bcrypt from 'bcrypt';
 import { User } from '@prisma/client';
 import { JwtService } from '@nestjs/jwt';
+import { DeleteUserDto } from './dto/delete-user.dto';
+import { AuthenticatedUser } from '../protocols/protocols';
 
 @Injectable()
 export class UserService {
@@ -42,9 +45,35 @@ export class UserService {
 
   async findOneById(id: number) {
     const user = await this.userRepository.getUserById(id);
-    if (!user) throw new UnauthorizedException('Invalid credentials!');
+    if (!user) throw new NotFoundException('User not found!');
 
     return user;
+  }
+
+  async deleteUser(
+    deleteUserDto: DeleteUserDto,
+    loggedUser: AuthenticatedUser,
+    userId: number,
+  ) {
+    const userById = await this.findOneById(userId);
+
+    if (loggedUser.id !== userById.id) {
+      throw new UnauthorizedException(
+        'You have not permission to delete this user!',
+      );
+    }
+    const { email } = loggedUser;
+    const { password } = deleteUserDto;
+
+    const user = await this.userRepository.getUserByEmail(email);
+    if (!user) throw new UnauthorizedException('Invalid credentials!');
+
+    const passwordIsValid = bcrypt.compareSync(password, user.password);
+    if (!passwordIsValid) {
+      throw new UnauthorizedException('Invalid credentials!');
+    }
+
+    return this.userRepository.deleteUserData(userId);
   }
 
   private generateToken(user: User) {
