@@ -15,6 +15,6 @@ export class UserController {
   @Post('sign-in')
   @HttpCode(HttpStatus.OK)
   signIn(@Body() signInDto: SignInDto) {
-    return this.userService.findOne(signInDto);
+    return this.userService.findOneByEmail(signInDto);
   }
 }

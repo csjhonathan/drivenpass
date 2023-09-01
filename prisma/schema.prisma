@@ -30,7 +30,7 @@ model Credential{
   userId Int
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  @@unique([title])
+  @@unique([title, userId])
 }
 
 model Note {
@@ -41,7 +41,7 @@ model Note {
   userId Int
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  @@unique([text])
+  @@unique([title, userId])
 }
 
 model Card{
@@ -57,7 +57,7 @@ model Card{
   userId Int
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  @@unique([title, number])
+  @@unique([title, userId])
 }
 
 model CardType{

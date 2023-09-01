@@ -13,6 +13,13 @@ export class UserRepository {
     return this.prisma.user.findUnique({ where: { email } });
   }
 
+  getUserById(id: number) {
+    return this.prisma.user.findUnique({
+      where: { id },
+      select: { id: true, name: true, email: true },
+    });
+  }
+
   createUser(userDto: CreateUserDto) {
     return this.prisma.user.create({
       data: {

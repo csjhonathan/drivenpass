@@ -26,7 +26,7 @@ export class UserService {
     return this.userRepository.createUser(createUserDto);
   }
 
-  async findOne(signInDto: SignInDto) {
+  async findOneByEmail(signInDto: SignInDto) {
     const { email, password } = signInDto;
 
     const user = await this.userRepository.getUserByEmail(email);
@@ -40,6 +40,13 @@ export class UserService {
     return this.generateToken(user);
   }
 
+  async findOneById(id: number) {
+    const user = await this.userRepository.getUserById(id);
+    if (!user) throw new UnauthorizedException('Invalid credentials!');
+
+    return user;
+  }
+
   private generateToken(user: User) {
     const { id, email, name } = user;
 
@@ -51,6 +58,15 @@ export class UserService {
         },
         { subject: String(id) },
       ),
+    };
+  }
+
+  checkToken(token: string) {
+    const tokenData = this.jwtService.verify(token);
+    return { ...tokenData, sub: parseInt(tokenData.sub) } as {
+      email: string;
+      name: string;
+      sub: number;
     };
   }
 }
