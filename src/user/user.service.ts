@@ -45,7 +45,9 @@ export class UserService {
 
   async findOneById(id: number) {
     const user = await this.userRepository.getUserById(id);
-    if (!user) throw new NotFoundException('User not found!');
+    if (!user) {
+      throw new NotFoundException('User not found!');
+    }
 
     return user;
   }
@@ -53,15 +55,9 @@ export class UserService {
   async deleteUser(
     deleteUserDto: DeleteUserDto,
     loggedUser: AuthenticatedUser,
-    userId: number,
   ) {
-    const userById = await this.findOneById(userId);
+    await this.findOneById(loggedUser.id);
 
-    if (loggedUser.id !== userById.id) {
-      throw new UnauthorizedException(
-        'You have not permission to delete this user!',
-      );
-    }
     const { email } = loggedUser;
     const { password } = deleteUserDto;
 
@@ -73,7 +69,7 @@ export class UserService {
       throw new UnauthorizedException('Invalid credentials!');
     }
 
-    return this.userRepository.deleteUserData(userId);
+    return this.userRepository.deleteUserData(loggedUser.id);
   }
 
   private generateToken(user: User) {
@@ -92,7 +88,7 @@ export class UserService {
 
   checkToken(token: string) {
     const tokenData = this.jwtService.verify(token);
-    return { ...tokenData, sub: parseInt(tokenData.sub) } as {
+    return { ...tokenData, sub: parseInt(tokenData.sub) } satisfies {
       email: string;
       name: string;
       sub: number;

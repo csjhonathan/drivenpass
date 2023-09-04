@@ -6,7 +6,7 @@ import {
 } from '@nestjs/common';
 import { CreateCredentialDto } from './dto/create-credential.dto';
 import { CredentialRepository } from './credential.repository';
-import { CredentialHelpers } from 'src/helpers/credential.helpers';
+import { CredentialHelpers } from '../helpers/credential.helpers';
 
 @Injectable()
 export class CredentialService {

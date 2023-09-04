@@ -6,8 +6,6 @@ import {
   HttpStatus,
   Delete,
   UseGuards,
-  Param,
-  ParseIntPipe,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -22,6 +20,7 @@ export class UserController {
   constructor(private readonly userService: UserService) {}
 
   @Post('auth/sign-up')
+  @HttpCode(HttpStatus.CREATED)
   signUp(@Body() createUserDto: CreateUserDto) {
     return this.userService.create(createUserDto);
   }
@@ -33,12 +32,12 @@ export class UserController {
   }
 
   @UseGuards(AuthGuard)
-  @Delete('/:id')
+  @Delete('/erase')
+  @HttpCode(HttpStatus.NO_CONTENT)
   delete(
     @Body() deleteUserDto: DeleteUserDto,
-    @Param('id', ParseIntPipe) id: number,
     @User() user: AuthenticatedUser,
   ) {
-    return this.userService.deleteUser(deleteUserDto, user, +id);
+    return this.userService.deleteUser(deleteUserDto, user);
   }
 }
