@@ -51,6 +51,14 @@ export class UserService {
 
     return user;
   }
+  async getUserByEmail(email: string) {
+    const user = await this.userRepository.getUserByEmail(email);
+    if (!user) {
+      throw new NotFoundException('User not found!');
+    }
+
+    return user;
+  }
 
   async deleteUser(
     deleteUserDto: DeleteUserDto,
@@ -61,15 +69,16 @@ export class UserService {
     const { email } = loggedUser;
     const { password } = deleteUserDto;
 
-    const user = await this.userRepository.getUserByEmail(email);
-    if (!user) throw new UnauthorizedException('Invalid credentials!');
-
-    const passwordIsValid = bcrypt.compareSync(password, user.password);
-    if (!passwordIsValid) {
+    try {
+      const user = await this.getUserByEmail(email);
+      const passwordIsValid = bcrypt.compareSync(password, user.password);
+      if (!passwordIsValid) {
+        throw new UnauthorizedException('Invalid credentials!');
+      }
+      return this.userRepository.deleteUserData(loggedUser.id);
+    } catch (error) {
       throw new UnauthorizedException('Invalid credentials!');
     }
-
-    return this.userRepository.deleteUserData(loggedUser.id);
   }
 
   private generateToken(user: User) {
@@ -86,12 +95,12 @@ export class UserService {
     };
   }
 
-  checkToken(token: string) {
+  checkToken(token: string): {
+    email: string;
+    name: string;
+    sub: number;
+  } {
     const tokenData = this.jwtService.verify(token);
-    return { ...tokenData, sub: parseInt(tokenData.sub) } satisfies {
-      email: string;
-      name: string;
-      sub: number;
-    };
+    return { ...tokenData, sub: parseInt(tokenData.sub) };
   }
 }

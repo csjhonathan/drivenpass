@@ -81,6 +81,7 @@ export class UserFactories {
 
   static generateToken(user: { id: number; name: string; email: string }) {
     const { id, email, name } = user;
+    console.log('generate token', { user });
     const jwtService = new JwtService({ secret: process.env.JWT_SECRET });
     const token = jwtService.sign(
       {

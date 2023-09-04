@@ -1,7 +1,9 @@
 import {
   CanActivate,
   ExecutionContext,
+  HttpStatus,
   Injectable,
+  NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
 import { Request, Response } from 'express';
@@ -27,11 +29,14 @@ export class AuthGuard implements CanActivate {
       const data = this.userService.checkToken(token);
 
       const user = await this.userService.findOneById(data.sub);
-
+      await this.userService.getUserByEmail(data.email);
       res.locals.user = user;
 
       return true;
     } catch (error) {
+      if (error.status === HttpStatus.NOT_FOUND) {
+        throw new NotFoundException(error.response);
+      }
       throw new UnauthorizedException();
     }
   }

@@ -269,17 +269,46 @@ describe('UserController (e2e)', () => {
     });
 
     describe('when token is valid', () => {
-      it('should respond with status 401 when user not exists', async () => {
-        const user = UserFactories.getFakerUserWithId();
-        const token = UserFactories.generateToken(user);
+      it('should respond with status 404 when user not exists (email)', async () => {
+        const user = UserFactories.fullBodyUser(true);
+        const { id, name } = await UserFactories.createDbUserEncrypted(
+          prisma,
+          user,
+        );
+        const token = UserFactories.generateToken({ id, email: 'oi', name });
 
         const { statusCode, body } = await server
           .delete('/user/erase')
-          .send({ password: UserFactories.fullBodyUser().password })
+          .send({ password: user.password })
           .set('Authorization', token);
 
-        expect(statusCode).toBe(HttpStatus.UNAUTHORIZED);
-        expect(body).toEqual({ message: 'Unauthorized', statusCode: 401 });
+        expect(statusCode).toBe(HttpStatus.NOT_FOUND);
+        expect(body).toEqual({
+          message: 'User not found!',
+          statusCode: HttpStatus.NOT_FOUND,
+          error: 'Not Found',
+        });
+      });
+
+      it('should respond with status 404 when user not exists (id)', async () => {
+        const user = UserFactories.fullBodyUser(true);
+        const { id, email, name } = await UserFactories.createDbUserEncrypted(
+          prisma,
+          user,
+        );
+        const token = UserFactories.generateToken({ id: id + 1, email, name });
+
+        const { statusCode, body } = await server
+          .delete('/user/erase')
+          .send({ password: user.password })
+          .set('Authorization', token);
+
+        expect(statusCode).toBe(HttpStatus.NOT_FOUND);
+        expect(body).toEqual({
+          message: 'User not found!',
+          statusCode: HttpStatus.NOT_FOUND,
+          error: 'Not Found',
+        });
       });
 
       it('should respond with status 400 when password is not provide', async () => {
