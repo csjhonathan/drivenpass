@@ -24,6 +24,7 @@ export class CredentialRepository {
         id: true,
         title: true,
         url: true,
+        username: true,
         password: true,
         userId: true,
       },

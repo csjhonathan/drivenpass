@@ -374,7 +374,7 @@ describe('UserController (e2e)', () => {
           cards,
           creds,
           notes,
-        } = await UserFactories.prismaGetUserFullDataById(prisma, id);
+        } = await UserFactories.prismaGetFullUserDataById(prisma, id);
 
         expect(statusCode).toBe(HttpStatus.NO_CONTENT);
         expect(deletedUser).toBeNull();

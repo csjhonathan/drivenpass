@@ -22,6 +22,7 @@ export class CredentialController {
   constructor(private readonly credentialService: CredentialService) {}
 
   @Post()
+  @HttpCode(HttpStatus.CREATED)
   create(
     @Body() createCredentialDto: CreateCredentialDto,
     @User() user: AuthenticatedUser,

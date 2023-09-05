@@ -81,7 +81,6 @@ export class UserFactories {
 
   static generateToken(user: { id: number; name: string; email: string }) {
     const { id, email, name } = user;
-    console.log('generate token', { user });
     const jwtService = new JwtService({ secret: process.env.JWT_SECRET });
     const token = jwtService.sign(
       {
@@ -93,7 +92,7 @@ export class UserFactories {
     return `Bearer ${token}`;
   }
 
-  static async prismaGetUserFullDataById(prisma: PrismaService, id: number) {
+  static async prismaGetFullUserDataById(prisma: PrismaService, id: number) {
     const [user, creds, cards, notes] = await Promise.all([
       prisma.user.findUnique({ where: { id } }),
       prisma.credential.findMany({ where: { userId: id } }),
@@ -102,5 +101,13 @@ export class UserFactories {
     ]);
 
     return { user, creds, cards, notes };
+  }
+
+  static async createUserAndValidToken(prisma: PrismaService) {
+    const fakerUser = UserFactories.fullBodyUser(true);
+    const user = await UserFactories.createDbUserEncrypted(prisma, fakerUser);
+    const token = UserFactories.generateToken(user);
+
+    return { user, token };
   }
 }
