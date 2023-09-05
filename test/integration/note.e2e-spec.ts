@@ -8,7 +8,7 @@ import { faker } from '@faker-js/faker';
 import { TestHelpers } from '../helpers/test.helpers';
 import { NoteFactories } from '../factories/noteFactories';
 
-describe('CredentialController (e2e)', () => {
+describe('NoteController (e2e)', () => {
   let app: INestApplication;
   let prisma: PrismaService = new PrismaService();
   let server: request.SuperTest<request.Test>;
@@ -184,7 +184,7 @@ describe('CredentialController (e2e)', () => {
         expect(body).toEqual([]);
       });
 
-      it('should respond with status 200 and an array with 10 credentials', async () => {
+      it('should respond with status 200 and an array with 10 notes', async () => {
         const { token, user } =
           await UserFactories.createUserAndValidToken(prisma);
         for (let i = 0; i < 10; i++) {

@@ -10,7 +10,7 @@ import {
 @ValidatorConstraint({ name: 'isCardNumber', async: false })
 export class IsCardString implements ValidatorConstraintInterface {
   validate(value: string) {
-    return value.length === 16;
+    return value?.length === 16;
   }
 
   defaultMessage() {
@@ -21,7 +21,7 @@ export class IsCardString implements ValidatorConstraintInterface {
 @ValidatorConstraint({ name: 'isCvvCardNumber', async: false })
 export class IsCardCvv implements ValidatorConstraintInterface {
   validate(value: string) {
-    return value.length === 3;
+    return value?.length === 3;
   }
 
   defaultMessage() {

@@ -22,6 +22,7 @@ export class CardController {
   constructor(private readonly cardService: CardService) {}
 
   @Post()
+  @HttpCode(HttpStatus.CREATED)
   create(
     @Body() createCardDto: CreateCardDto,
     @User() user: AuthenticatedUser,

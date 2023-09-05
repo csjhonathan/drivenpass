@@ -93,16 +93,4 @@ export class CredentialFactories {
       password: this.crypter.encrypt(cred.password),
     };
   }
-
-  private decryptCredential(cred: {
-    title: string;
-    url: string;
-    username: string;
-    password: string;
-  }) {
-    return {
-      ...cred,
-      password: this.crypter.decrypt(cred.password),
-    };
-  }
 }

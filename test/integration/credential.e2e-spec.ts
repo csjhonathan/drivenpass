@@ -439,7 +439,7 @@ describe('CredentialController (e2e)', () => {
         });
       });
 
-      it('should respond with status 204 and credential data', async () => {
+      it('should respond with status 204', async () => {
         const { token, user } =
           await UserFactories.createUserAndValidToken(prisma);
         const cred =

@@ -5,6 +5,9 @@ import { AppModule } from './../../src/app.module';
 import { PrismaService } from '../../src/prisma/prisma.service';
 import { UserFactories } from '../factories/userFactories';
 import { TestHelpers } from '../helpers/test.helpers';
+import { CredentialFactories } from '../factories/credentialFactories';
+import { NoteFactories } from '../factories/noteFactories';
+import { CardFactories } from '../factories/cardFactories';
 
 describe('UserController (e2e)', () => {
   let app: INestApplication;
@@ -362,6 +365,39 @@ describe('UserController (e2e)', () => {
           prisma,
           user,
         );
+
+        const [type1, type2] =
+          await CardFactories.createAndGetCardTypesDb(prisma);
+
+        for (let i = 0; i < 5; i++) {
+          const fakerCredential =
+            CredentialFactories.credentialWithoutFieldorFullBody('full');
+          await CredentialFactories.createDbCredential(
+            prisma,
+            fakerCredential,
+            id,
+          );
+
+          const fakerNote = NoteFactories.noteWithoutFieldorFullBody();
+          await NoteFactories.createDbNote(prisma, fakerNote, id);
+
+          const fakerCard = CardFactories.cardWithoutFieldorFullBody(
+            '',
+            {
+              validCardNumber: true,
+              validCvvNumber: true,
+              validDateFormat: true,
+            },
+            [type1.id, type2.id],
+          );
+
+          await CardFactories.createDbCard(
+            prisma,
+            { ...fakerCard, title: `${fakerCard.title}-${i}` },
+            id,
+          );
+        }
+
         const token = UserFactories.generateToken({ id, email, name });
 
         const { statusCode } = await server
