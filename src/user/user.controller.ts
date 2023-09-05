@@ -39,6 +39,10 @@ export class UserController {
     status: HttpStatus.CONFLICT,
     description: 'Sended email is already in use!',
   })
+  @ApiResponse({
+    status: HttpStatus.BAD_REQUEST,
+    description: 'Request body have invalid format or data!',
+  })
   signUp(@Body() createUserDto: CreateUserDto) {
     return this.userService.create(createUserDto);
   }
@@ -63,6 +67,10 @@ export class UserController {
     status: HttpStatus.UNAUTHORIZED,
     description:
       'Your email doesnt exists in database or your password is wrong!',
+  })
+  @ApiResponse({
+    status: HttpStatus.BAD_REQUEST,
+    description: 'Request body have invalid format or data!',
   })
   signIn(@Body() signInDto: SignInDto) {
     return this.userService.findOneByEmail(signInDto);
@@ -89,6 +97,10 @@ export class UserController {
     status: HttpStatus.NOT_FOUND,
     description:
       "For some reason you tried to delete a user that doesn't exist!",
+  })
+  @ApiResponse({
+    status: HttpStatus.BAD_REQUEST,
+    description: 'Request body have invalid format or data!',
   })
   @ApiBearerAuth()
   delete(
