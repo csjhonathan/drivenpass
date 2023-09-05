@@ -38,8 +38,17 @@ export class CardHelpers {
       password: 'the password you use on the website you are saving',
       userId: 'Some user id',
       CardType: [{ type: 'Debit' }],
-      createdAt: 'The date that note has been created!',
-      updatedAt: 'The last date that note has been updated!',
+      createdAt: 'The date that card has been created!',
+      updatedAt: 'The last date that card has been updated!',
+    };
+  }
+
+  static getCardTypeExample(example: 'Debit' | 'Credit') {
+    return {
+      id: 'Some id number',
+      type: example === 'Debit' ? 'Debit' : 'Credit',
+      createdAt: 'The date that card type has been created!',
+      updatedAt: 'The last date that card type has been updated!',
     };
   }
 }

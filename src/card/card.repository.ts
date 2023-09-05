@@ -46,6 +46,9 @@ export class CardRepository {
       },
     });
   }
+  findAllCardTypes() {
+    return this.prisma.cardType.findMany();
+  }
 
   findAll(userId: number) {
     return this.prisma.card.findMany({

@@ -60,7 +60,33 @@ export class CardController {
     return this.cardService.create(createCardDto, id);
   }
 
+  @Get('/types')
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({ summary: 'Provides a list with all card types in database!' })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'You received a list with all card types or an empty array!',
+    content: {
+      'application/json': {
+        example: {
+          cardTypes: [
+            CardHelpers.getCardTypeExample('Debit'),
+            CardHelpers.getCardTypeExample('Credit'),
+          ],
+        },
+      },
+    },
+  })
+  @ApiResponse({
+    status: HttpStatus.UNAUTHORIZED,
+    description: 'The provided jwt token is invalid!',
+  })
+  findAllTypes() {
+    return this.cardService.findAllCardTypes();
+  }
+
   @Get()
+  @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'Provides a list with all user cards!' })
   @ApiResponse({
     status: HttpStatus.OK,
@@ -90,6 +116,7 @@ export class CardController {
   }
 
   @Get(':id')
+  @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'Provides a unique card for that user!' })
   @ApiResponse({
     status: HttpStatus.OK,

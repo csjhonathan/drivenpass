@@ -30,6 +30,10 @@ export class CardService {
     return this.cardRepository.create(data, userId);
   }
 
+  findAllCardTypes() {
+    return this.cardRepository.findAllCardTypes();
+  }
+
   async findAll(userId: number) {
     const cards = await this.cardRepository.findAll(userId);
 

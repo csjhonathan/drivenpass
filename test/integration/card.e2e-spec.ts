@@ -75,20 +75,20 @@ describe('CardController (e2e)', () => {
           message: [
             'title must be a string',
             'title should not be empty',
-            'Card number must have 16 digits!',
+            'card number must have 16 digits!',
             'number must be a number string',
             'number should not be empty',
             'owner must be a string',
             'owner should not be empty',
-            'Card cvv number must have 3 digits!',
+            'card cvv number must have 3 digits!',
             'cvv must be a number string',
             'cvv should not be empty',
-            'Expiration date must have format "MM/YYYY"!',
+            'expiration date must have format "MM/YYYY"!',
             'expiration must be a string',
             'expiration should not be empty',
             'password must be a string',
             'password should not be empty',
-            'Type must be a number or a list of numbers!',
+            'type must be a list of numbers!',
             'type should not be empty',
           ],
           statusCode: 400,
@@ -133,7 +133,7 @@ describe('CardController (e2e)', () => {
         expect(body).toEqual({
           error: 'Bad Request',
           message: [
-            'Card number must have 16 digits!',
+            'card number must have 16 digits!',
             'number must be a number string',
             'number should not be empty',
           ],
@@ -179,7 +179,7 @@ describe('CardController (e2e)', () => {
         expect(body).toEqual({
           error: 'Bad Request',
           message: [
-            'Card cvv number must have 3 digits!',
+            'card cvv number must have 3 digits!',
             'cvv must be a number string',
             'cvv should not be empty',
           ],
@@ -204,7 +204,7 @@ describe('CardController (e2e)', () => {
         expect(body).toEqual({
           error: 'Bad Request',
           message: [
-            'Expiration date must have format "MM/YYYY"!',
+            'expiration date must have format "MM/YYYY"!',
             'expiration must be a string',
             'expiration should not be empty',
           ],
@@ -253,7 +253,7 @@ describe('CardController (e2e)', () => {
         expect(body).toEqual({
           error: 'Bad Request',
           message: [
-            'Type must be a number or a list of numbers!',
+            'type must be a list of numbers!',
             'type should not be empty',
           ],
           statusCode: 400,
@@ -276,7 +276,7 @@ describe('CardController (e2e)', () => {
         expect(statusCode).toBe(HttpStatus.BAD_REQUEST);
         expect(body).toEqual({
           error: 'Bad Request',
-          message: ['Card number must have 16 digits!'],
+          message: ['card number must have 16 digits!'],
           statusCode: 400,
         });
       });
@@ -297,7 +297,7 @@ describe('CardController (e2e)', () => {
         expect(statusCode).toBe(HttpStatus.BAD_REQUEST);
         expect(body).toEqual({
           error: 'Bad Request',
-          message: ['Card cvv number must have 3 digits!'],
+          message: ['card cvv number must have 3 digits!'],
           statusCode: 400,
         });
       });
@@ -318,7 +318,7 @@ describe('CardController (e2e)', () => {
         expect(statusCode).toBe(HttpStatus.BAD_REQUEST);
         expect(body).toEqual({
           error: 'Bad Request',
-          message: ['Expiration date must have format "MM/YYYY"!'],
+          message: ['expiration date must have format "MM/YYYY"!'],
           statusCode: 400,
         });
       });
@@ -392,6 +392,39 @@ describe('CardController (e2e)', () => {
 
         expect(statusCode).toBe(HttpStatus.OK);
         expect(body).toEqual([]);
+      });
+
+      describe('GET /cards/types', () => {
+        it('should respond with status 200 and empty array when have no card types in database', async () => {
+          const { token } = await UserFactories.createUserAndValidToken(prisma);
+          const { statusCode, body } = await server
+            .get('/cards/types')
+            .set('Authorization', token);
+
+          expect(statusCode).toBe(HttpStatus.OK);
+          expect(body).toHaveLength(0);
+        });
+
+        it('should respond with status 200 and an array with 2 card types', async () => {
+          const { token } = await UserFactories.createUserAndValidToken(prisma);
+          await CardFactories.createAndGetCardTypesDb(prisma);
+          const { statusCode, body } = await server
+            .get('/cards/types')
+            .set('Authorization', token);
+
+          expect(statusCode).toBe(HttpStatus.OK);
+          expect(body).toHaveLength(2);
+          expect(body).toEqual(
+            expect.arrayContaining([
+              expect.objectContaining({
+                id: expect.any(Number),
+                type: expect.any(String),
+                createdAt: expect.any(String),
+                updatedAt: expect.any(String),
+              }),
+            ]),
+          );
+        });
       });
 
       it('should respond with status 200 and an array with 10 credentials', async () => {

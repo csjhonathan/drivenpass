@@ -33,8 +33,8 @@ export class CredentialHelpers {
       username: 'Some text',
       password: 'the password you use on the website you are saving',
       userId: 'Some user id',
-      createdAt: 'The date that note has been created!',
-      updatedAt: 'The last date that note has been updated!',
+      createdAt: 'The date that credential has been created!',
+      updatedAt: 'The last date that credential has been updated!',
     };
   }
 }
