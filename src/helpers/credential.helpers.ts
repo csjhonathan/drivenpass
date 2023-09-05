@@ -24,4 +24,17 @@ export class CredentialHelpers {
       password: this.crypter.decrypt(cred.password),
     };
   }
+
+  static getCredentialExample() {
+    return {
+      id: 'Some id number',
+      title: 'Some title',
+      url: 'Some text',
+      username: 'Some text',
+      password: 'the password you use on the website you are saving',
+      userId: 'Some user id',
+      createdAt: 'The date that note has been created!',
+      updatedAt: 'The last date that note has been updated!',
+    };
+  }
 }
