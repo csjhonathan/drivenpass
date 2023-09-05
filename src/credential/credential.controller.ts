@@ -126,7 +126,6 @@ export class CredentialController {
 
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
-  @HttpCode(HttpStatus.NO_CONTENT)
   @ApiOperation({ summary: 'Delete a unique credential for that user!' })
   @ApiResponse({
     status: HttpStatus.NO_CONTENT,

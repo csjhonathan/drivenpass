@@ -1,3 +1,4 @@
+import { ApiProperty } from '@nestjs/swagger';
 import {
   IsNotEmpty,
   IsNumberString,
@@ -14,7 +15,7 @@ export class IsCardString implements ValidatorConstraintInterface {
   }
 
   defaultMessage() {
-    return 'Card number must have 16 digits!';
+    return 'card number must have 16 digits!';
   }
 }
 
@@ -25,7 +26,7 @@ export class IsCardCvv implements ValidatorConstraintInterface {
   }
 
   defaultMessage() {
-    return 'Card cvv number must have 3 digits!';
+    return 'card cvv number must have 3 digits!';
   }
 }
 
@@ -37,7 +38,7 @@ export class IsCardExpiration implements ValidatorConstraintInterface {
   }
 
   defaultMessage() {
-    return 'Expiration date must have format "MM/YYYY"!';
+    return 'expiration date must have format "MM/YYYY"!';
   }
 }
 
@@ -54,39 +55,70 @@ export class IsNumberArray implements ValidatorConstraintInterface {
   }
 
   defaultMessage() {
-    return 'Type must be a number or a list of numbers!';
+    return 'type must be a list of numbers!';
   }
 }
 
 export class CreateCardDto {
   @IsNotEmpty()
   @IsString()
+  @ApiProperty({
+    example: 'My Card Title',
+    description:
+      'This field requires a title to your card, thats must be unique!',
+  })
   title: string;
 
   @IsNotEmpty()
   @IsNumberString()
   @Validate(IsCardString)
+  @ApiProperty({
+    example: '1234567887654321',
+    description:
+      'This field requires a numeric string for card number to your card, thats must have a 16 digits without white spaces!',
+  })
   number: string;
 
   @IsNotEmpty()
   @IsString()
+  @ApiProperty({
+    example: 'John Doe',
+    description: 'This field requires a owner name to your card!',
+  })
   owner: string;
 
   @IsNotEmpty()
   @IsNumberString()
   @Validate(IsCardCvv)
+  @ApiProperty({
+    example: '123',
+    description:
+      'This field requires a numeric string for cvv card number to your card, thats must have a 3 digits without white spaces!',
+  })
   cvv: string;
 
   @IsNotEmpty()
   @IsString()
   @Validate(IsCardExpiration)
+  @ApiProperty({
+    example: '03/2025',
+    description: 'This field requires a date in YY/MMMM format!',
+  })
   expiration: string;
 
   @IsNotEmpty()
   @IsString()
+  @ApiProperty({
+    example: '1234',
+    description: 'This field requires a password to your card!',
+  })
   password: string;
 
   @IsNotEmpty()
   @Validate(IsNumberArray)
+  @ApiProperty({
+    example: [1, 2],
+    description: 'This field requires an array with cardTypeId for!',
+  })
   type: number[];
 }

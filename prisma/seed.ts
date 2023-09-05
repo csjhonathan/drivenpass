@@ -10,7 +10,7 @@ async function dbSeed() {
       throw 'Já existem 2 tipos de cartão no banco de dados.';
     }
 
-    const cardTypes: string[] = ['Crédito', 'Débito'];
+    const cardTypes: string[] = ['Credit', 'Debit'];
 
     cardTypes.forEach(async (type) => {
       await prisma.cardType.create({

@@ -223,7 +223,7 @@ export class CardFactories {
 
   static async createAndGetCardTypesDb(prisma: PrismaService) {
     await prisma.cardType.createMany({
-      data: [{ type: 'Débito' }, { type: 'Crédito' }],
+      data: [{ type: 'Debit' }, { type: 'Credit' }],
     });
 
     return prisma.cardType.findMany({
