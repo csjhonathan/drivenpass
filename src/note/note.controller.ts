@@ -22,6 +22,7 @@ export class NoteController {
   constructor(private readonly noteService: NoteService) {}
 
   @Post()
+  @HttpCode(HttpStatus.CREATED)
   create(
     @Body() createNoteDto: CreateNoteDto,
     @User() user: AuthenticatedUser,

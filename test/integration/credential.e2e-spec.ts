@@ -161,7 +161,7 @@ describe('CredentialController (e2e)', () => {
         });
       });
 
-      it('should respond with status 409 when credential already exists', async () => {
+      it('should respond with status 409 when credential already exists in user collection', async () => {
         const { token, user } =
           await UserFactories.createUserAndValidToken(prisma);
 
@@ -272,6 +272,8 @@ describe('CredentialController (e2e)', () => {
               url: expect.any(String),
               password: expect.any(String),
               userId: expect.any(Number),
+              createdAt: expect.any(String),
+              updatedAt: expect.any(String),
             }),
           ]),
         );
@@ -360,7 +362,7 @@ describe('CredentialController (e2e)', () => {
 
         expect(statusCode).toBe(HttpStatus.OK);
         expect(body).toEqual({
-          id: expect.any(Number),
+          id: credential.id,
           title: cred.title,
           url: cred.url,
           username: cred.username,
