@@ -15,7 +15,9 @@ import { CreateNoteDto } from './dto/create-note.dto';
 import { AuthGuard } from '../guards/auth.guard';
 import { User } from '../decorators/user.decorator';
 import { AuthenticatedUser } from '../protocols/protocols';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('notes')
 @UseGuards(AuthGuard)
 @Controller('notes')
 export class NoteController {
